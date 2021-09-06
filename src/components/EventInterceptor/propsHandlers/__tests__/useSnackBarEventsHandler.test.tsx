@@ -20,12 +20,15 @@ const defaultProps = {
 };
 
 const eventHandler = jest.fn();
+const basicSnackBarRef = React.createRef<HTMLElement>();
 const renderComponent = (props: Props = defaultProps) => {
   return render(<SnackBar data-testid={testId} {...props} />);
 };
 
 describe('useSnackBarEventsHandler', () => {
-  const { result } = renderHook(() => useSnackBarEventsHandler(defaultProps, eventHandler));
+  const { result } = renderHook(() =>
+    useSnackBarEventsHandler(defaultProps, eventHandler, basicSnackBarRef),
+  );
 
   it('возвращает пропсы в том же виде, что и получил', () => {
     let props = {};

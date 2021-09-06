@@ -1,28 +1,28 @@
 import React from 'react';
 
-import { CheckboxProps, cnCheckbox } from '../../Checkbox/Checkbox';
-import { EventInterceptorHandler, EventInterceptorPropComponent } from '../EventInterceptor';
+import { Checkbox, COMPONENT_NAME } from '../../Checkbox/Checkbox';
+import { EventInterceptorHandler } from '../EventInterceptor';
 
-export const useCheckboxEventsHandler = (
-  props: CheckboxProps,
+type CheckboxProps = Parameters<typeof Checkbox>[0];
+export const useCheckboxEventsHandler = <P extends CheckboxProps>(
+  props: P,
   handler: EventInterceptorHandler,
-  checkboxRef: React.RefObject<HTMLLabelElement>,
-) => {
+  ref: React.RefObject<HTMLElement | null>,
+): P => {
   const newProps = { ...props };
 
   newProps.onChange = (...onChangeArgs) => {
     const [{ checked }] = onChangeArgs;
-    const value = {
-      component: cnCheckbox() as EventInterceptorPropComponent,
+    handler!({
+      component: COMPONENT_NAME,
       event: 'change',
       options: {
         label: newProps.label,
         checked,
         pageURL: window.location.href,
-        DOMRef: checkboxRef.current,
+        DOMRef: ref.current,
       },
-    };
-    handler!(value);
+    });
 
     return props.onChange?.(...onChangeArgs);
   };

@@ -1,6 +1,6 @@
 import './SnackBar.css';
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import { IconProps } from '../../icons/Icon/Icon';
@@ -38,16 +38,25 @@ type Props = {
 
 export type SnackBarProps = PropsWithHTMLAttributes<Props, HTMLDivElement>;
 
-export const cnSnackBar = cn('SnackBar');
-export const cnSnackBarItem = cn('SnackBar', 'Item');
+export const COMPONENT_NAME = 'SnackBar' as const;
+export const cnSnackBar = cn(COMPONENT_NAME);
+export const cnSnackBarItem = cn(COMPONENT_NAME, 'Item');
 
 const cssTransitionClassNames = cnForCssTransition(cnSnackBarItem);
 
 export const SnackBar: React.FC<SnackBarProps> = (props) => {
-  const { items, className, ...otherProps } = usePropsHandler(cnSnackBar(), props);
+  const ref = useRef(null);
+  const { items, className, ...otherProps } = usePropsHandler(COMPONENT_NAME, props, ref);
 
   return (
-    <TransitionGroup {...otherProps} className={cnSnackBar(null, [className])} appear enter exit>
+    <TransitionGroup
+      {...otherProps}
+      ref={ref}
+      className={cnSnackBar(null, [className])}
+      appear
+      enter
+      exit
+    >
       {items.map((item) => {
         return (
           <CSSTransition classNames={cssTransitionClassNames} key={item.key} timeout={200}>

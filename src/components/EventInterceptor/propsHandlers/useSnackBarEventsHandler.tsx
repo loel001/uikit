@@ -1,27 +1,28 @@
 import React from 'react';
 
-import { cnSnackBar, SnackBarProps } from '../../SnackBar/SnackBar';
-import { EventInterceptorHandler, EventInterceptorPropComponent } from '../EventInterceptor';
+import { COMPONENT_NAME, SnackBar } from '../../SnackBar/SnackBar';
+import { EventInterceptorHandler } from '../EventInterceptor';
 
-export const useSnackBarEventsHandler = (
-  props: SnackBarProps,
+type SnackBarProps = Parameters<typeof SnackBar>[0];
+
+export const useSnackBarEventsHandler = <P extends SnackBarProps>(
+  props: P,
   handler: EventInterceptorHandler,
-) => {
+  ref: React.RefObject<HTMLElement | null>,
+): P => {
   const newProps = { ...props };
 
   React.useEffect(() => {
     if (newProps.items.length) {
-      const value = {
-        component: cnSnackBar() as EventInterceptorPropComponent,
+      handler!({
+        component: COMPONENT_NAME,
         event: 'change',
         options: {
           pageURL: window.location.href,
-          DOMRef: document.getElementsByClassName(cnSnackBar())[0],
+          DOMRef: ref,
           items: newProps.items,
         },
-      };
-
-      handler!(value);
+      });
     }
   }, [newProps.items.length]);
 

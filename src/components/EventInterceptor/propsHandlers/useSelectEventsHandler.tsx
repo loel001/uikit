@@ -1,8 +1,8 @@
 import React from 'react';
 
 import { defaultGetItemLabel, SelectProps } from '../../Select/helpers';
-import { cnSelect } from '../../SelectComponents/cnSelect';
-import { EventInterceptorHandler, EventInterceptorPropComponent } from '../EventInterceptor';
+import { COMPONENT_NAME } from '../../SelectComponents/cnSelect';
+import { EventInterceptorHandler } from '../EventInterceptor';
 
 export const useSelectEventsHandler = (
   props: SelectProps,
@@ -14,7 +14,7 @@ export const useSelectEventsHandler = (
   React.useEffect(() => {
     if (newProps.value) {
       const value = {
-        component: cnSelect() as EventInterceptorPropComponent,
+        component: COMPONENT_NAME,
         event: 'change',
         options: {
           placeholder: newProps.placeholder,

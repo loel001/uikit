@@ -14,6 +14,7 @@ const renderComponent = (props: Props = {}) => {
 };
 
 const eventHandler = jest.fn();
+const basicButtonRef = React.createRef<HTMLDivElement>();
 
 describe('useButtonEventHandler', () => {
   const buttonProps: ButtonProps = {
@@ -24,7 +25,9 @@ describe('useButtonEventHandler', () => {
     label: 'label',
     onClick: jest.fn(),
   };
-  const { result } = renderHook(() => useButtonEventHandler(buttonProps, eventHandler));
+  const { result } = renderHook(() =>
+    useButtonEventHandler(buttonProps, eventHandler, basicButtonRef),
+  );
 
   it('возвращает пропсы в том же виде, что и получил', () => {
     let props = {};

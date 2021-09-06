@@ -1,27 +1,28 @@
-import { PropsWithAsAttributes } from '../../../utils/types/PropsWithAsAttributes';
-import { cnButton, Props } from '../../Button/Button';
-import { EventInterceptorHandler, EventInterceptorPropComponent } from '../EventInterceptor';
+import React from 'react';
 
-export type ButtonProps<As extends keyof JSX.IntrinsicElements = 'button'> = PropsWithAsAttributes<
-  Props,
-  As
->;
+import { Button, COMPONENT_NAME } from '../../Button/Button';
+import { EventInterceptorHandler } from '../EventInterceptor';
 
-export const useButtonEventHandler = (props: ButtonProps, handler: EventInterceptorHandler) => {
+export type ButtonProps = Parameters<typeof Button>[0];
+
+export const useButtonEventHandler = <P extends ButtonProps>(
+  props: P,
+  handler: EventInterceptorHandler,
+  ref: React.RefObject<HTMLElement | null>,
+): P => {
   const newProps = { ...props };
 
   newProps.onClick = (...onClickArgs) => {
     const [e] = onClickArgs;
-    const value = {
-      component: cnButton() as EventInterceptorPropComponent,
+    handler!({
+      component: COMPONENT_NAME,
       event: e.type,
       options: {
         text: (e.currentTarget as HTMLButtonElement).innerText,
         pageURL: e.currentTarget.baseURI,
-        DOMRef: e.currentTarget,
+        DOMRef: ref,
       },
-    };
-    handler!(value);
+    });
 
     return props.onClick?.(...onClickArgs);
   };

@@ -52,7 +52,7 @@
   ],
   "husky": {
     "hooks": {
-      "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true",
+      "prepare-commit-msg_": "exec < /dev/tty && git cz --hook || true",
       "pre-commit": "yarn run pre-commit",
       "pre-push": "yarn run pre-push"
     }

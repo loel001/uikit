@@ -1,13 +1,15 @@
 import React from 'react';
 
-import { cnTextField, TextFieldProps } from '../../TextField/TextField';
-import { EventInterceptorHandler, EventInterceptorPropComponent } from '../EventInterceptor';
+import { COMPONENT_NAME, TextField } from '../../TextField/TextField';
+import { EventInterceptorHandler } from '../EventInterceptor';
 
-export const useTextFieldEventsHandler = (
-  props: TextFieldProps,
+type TextFieldProps = Parameters<typeof TextField>[0];
+
+export const useTextFieldEventsHandler = <P extends TextFieldProps>(
+  props: P,
   handler: EventInterceptorHandler,
-  textFieldRef: React.RefObject<HTMLDivElement>,
-) => {
+  ref: React.RefObject<HTMLElement | null>,
+): P => {
   const [inputChanged, setInputChanged] = React.useState<boolean>(false);
   const newProps = { ...props };
 
@@ -22,18 +24,17 @@ export const useTextFieldEventsHandler = (
   };
 
   newProps.onBlur = (...onBlurArgs) => {
-    const value = {
-      component: cnTextField() as EventInterceptorPropComponent,
-      event: 'change',
-      options: {
-        placeholder: newProps.placeholder,
-        pageURL: window.location.href,
-        DOMRef: textFieldRef.current,
-        value: newProps.value,
-      },
-    };
     if (inputChanged) {
-      handler!(value);
+      handler!({
+        component: COMPONENT_NAME,
+        event: 'change',
+        options: {
+          placeholder: newProps.placeholder,
+          pageURL: window.location.href,
+          DOMRef: ref.current,
+          value: newProps.value,
+        },
+      });
     }
 
     return props.onBlur?.(...onBlurArgs);
